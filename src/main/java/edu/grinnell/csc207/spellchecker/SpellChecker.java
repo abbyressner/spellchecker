@@ -26,23 +26,47 @@ public class SpellChecker {
 
     /** A Node of the SpellChecker structure. */
     private class Node {
-        // TODO: implement me!
+        private Node[] children;
+        private boolean isWord;
+
+        public Node() {
+            this.children = new Node[NUM_LETTERS];
+            this.isWord = false;
+        }
     }
 
     /** The root of the SpellChecker */
     private Node root;
 
     public SpellChecker(List<String> dict) {
-        // TODO: implement me!
+        this.root = new Node();
+        for (String word : dict) {
+            add(word.toLowerCase());
+        }
     }
 
     public void add(String word) {
-        // TODO: implement me!
+        Node cur = root;
+        for (char c : word.toCharArray()) {
+            int idx = c - 'a';
+            if (cur.children[idx] == null) {
+                cur.children[idx] = new Node();
+            }
+            cur = cur.children[idx];
+        }
+        cur.isWord = true;
     }
 
     public boolean isWord(String word) {
-        // TODO: implement me!
-        return false;
+        Node cur = root;
+        for (char c : word.toCharArray()) {
+            int idx = c - 'a';
+            if (cur.children[idx] == null) {
+                return false;
+            }
+            cur = cur.children[idx];
+        }
+        return cur.isWord;
     }
 
     public List<String> getOneCharCompletions(String word) {
