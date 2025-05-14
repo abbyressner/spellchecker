@@ -99,16 +99,8 @@ public class SpellChecker {
     }
 
     public List<String> getOneCharEndCorrections(String word) {
-        Node cur = root;
-        List<String> corrs = new ArrayList<>();
-        // remove last character
-        if (word.length() > 0) {
-            String candidate = word.substring(0, word.length() - 1);
-            if (isWord(candidate)) {
-                corrs.add(candidate);
-            }
-        }
-        return corrs;
+        // TODO: implement me!
+        return null;
     }
 
     public List<String> getOneCharCorrections(String word) {
