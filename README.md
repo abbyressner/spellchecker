@@ -1,6 +1,6 @@
 # Lab: Spellchecker
 
-Authors: (_TODO: fill in names here!_)
+Authors: Abby Ressner
 
 ## Resources
 
