@@ -3,17 +3,23 @@ package edu.grinnell.csc207.spellchecker;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A spellchecker maintains an efficient representation of a dictionary for
- * the purposes of checking spelling and provided suggested corrections.
+ * A spellchecker maintains an efficient representation of a dictionary for the
+ * purposes of checking spelling and provided suggested corrections.
  */
 public class SpellChecker {
-    /** The number of letters in the alphabet. */
+
+    /**
+     * The number of letters in the alphabet.
+     */
     private static final int NUM_LETTERS = 26;
 
-    /** The path to the dictionary file. */
+    /**
+     * The path to the dictionary file.
+     */
     private static final String DICT_PATH = "words_alpha.txt";
 
     /**
@@ -24,8 +30,11 @@ public class SpellChecker {
         return new SpellChecker(Files.readAllLines(Paths.get(filename)));
     }
 
-    /** A Node of the SpellChecker structure. */
+    /**
+     * A Node of the SpellChecker structure.
+     */
     private class Node {
+
         private Node[] children;
         private boolean isWord;
 
@@ -35,7 +44,9 @@ public class SpellChecker {
         }
     }
 
-    /** The root of the SpellChecker */
+    /**
+     * The root of the SpellChecker
+     */
     private Node root;
 
     public SpellChecker(List<String> dict) {
@@ -47,36 +58,57 @@ public class SpellChecker {
 
     public void add(String word) {
         Node cur = root;
-        for (char c : word.toCharArray()) {
-            int idx = c - 'a';
-            if (cur.children[idx] == null) {
-                cur.children[idx] = new Node();
+        for (char ch : word.toCharArray()) {
+            if (cur.children[ch - 'a'] == null) {
+                cur.children[ch - 'a'] = new Node();
             }
-            cur = cur.children[idx];
+            cur = cur.children[ch - 'a'];
         }
         cur.isWord = true;
     }
 
     public boolean isWord(String word) {
         Node cur = root;
-        for (char c : word.toCharArray()) {
-            int idx = c - 'a';
-            if (cur.children[idx] == null) {
+        for (char ch : word.toCharArray()) {
+            if (cur.children[ch - 'a'] == null) {
                 return false;
             }
-            cur = cur.children[idx];
+            cur = cur.children[ch - 'a'];
         }
         return cur.isWord;
     }
 
     public List<String> getOneCharCompletions(String word) {
-        // TOOD: implement me!
-        return null;
+        Node cur = root;
+        List<String> compls = new ArrayList<>();
+
+        for (char ch : word.toCharArray()) {
+            if (cur.children[ch - 'a'] == null) {
+                return compls;
+            }
+            cur = cur.children[ch - 'a'];
+        }
+
+        for (int i = 0; i < NUM_LETTERS; i++) {
+            if (cur.children[i] != null && cur.children[i].isWord) {
+                compls.add(word + (char) ('a' + i));
+            }
+        }
+
+        return compls;
     }
 
     public List<String> getOneCharEndCorrections(String word) {
-        // TODO: implement me!
-        return null;
+        Node cur = root;
+        List<String> corrs = new ArrayList<>();
+        // remove last character
+        if (word.length() > 0) {
+            String candidate = word.substring(0, word.length() - 1);
+            if (isWord(candidate)) {
+                corrs.add(candidate);
+            }
+        }
+        return corrs;
     }
 
     public List<String> getOneCharCorrections(String word) {
